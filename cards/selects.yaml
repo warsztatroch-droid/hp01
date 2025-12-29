@@ -1,0 +1,24 @@
+# Wybory trybu (Select)
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: entities
+title: Wybory trybu
+entities:
+  - entity: select.warmlink_DEVICE_CODE_mode_select
+    name: Tryb pracy
+    icon: mdi:heat-pump
+  - entity: select.warmlink_DEVICE_CODE_h07_select
+    name: Tryb sterowania
+    icon: mdi:remote
+  - entity: select.warmlink_DEVICE_CODE_h21_select
+    name: Jednostka temperatury
+    icon: mdi:temperature-celsius
+  - entity: select.warmlink_DEVICE_CODE_h25_select
+    name: Źródło sterowania temp.
+    icon: mdi:thermostat
+  - entity: select.warmlink_DEVICE_CODE_h27_select
+    name: Funkcja EVI
+    icon: mdi:arrow-expand-vertical
+  - entity: select.warmlink_DEVICE_CODE_h28_select
+    name: Funkcja CWU
+    icon: mdi:water-boiler

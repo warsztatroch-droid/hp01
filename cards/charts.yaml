@@ -1,0 +1,48 @@
+# Wykresy historii
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+# Historia temperatur (24h)
+type: history-graph
+title: Historia temperatur
+hours_to_show: 24
+entities:
+  - entity: sensor.warmlink_DEVICE_CODE_t01
+    name: Wlot
+  - entity: sensor.warmlink_DEVICE_CODE_t02
+    name: Wylot
+  - entity: sensor.warmlink_DEVICE_CODE_t04
+    name: Zewnętrzna
+  - entity: sensor.warmlink_DEVICE_CODE_t08
+    name: Zasobnik CWU
+
+---
+
+# Historia COP (48h)
+type: history-graph
+title: COP/EER
+hours_to_show: 48
+entities:
+  - entity: sensor.warmlink_DEVICE_CODE_cop_eer_total
+    name: COP
+
+---
+
+# Historia mocy (24h)
+type: history-graph
+title: Moc i wydajność
+hours_to_show: 24
+entities:
+  - entity: sensor.warmlink_DEVICE_CODE_power_in_total
+    name: Pobór mocy
+  - entity: sensor.warmlink_DEVICE_CODE_capacity_out_total
+    name: Moc grzewcza
+
+---
+
+# Częstotliwość sprężarki (24h)
+type: history-graph
+title: Sprężarka
+hours_to_show: 24
+entities:
+  - entity: sensor.warmlink_DEVICE_CODE_t30
+    name: Częstotliwość

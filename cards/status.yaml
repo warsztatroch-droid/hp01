@@ -1,0 +1,18 @@
+# Karta statusu pompy ciepła
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: entities
+title: Status
+entities:
+  - entity: binary_sensor.warmlink_DEVICE_CODE_online
+    name: Status połączenia
+    icon: mdi:wifi
+  - entity: binary_sensor.warmlink_DEVICE_CODE_power
+    name: Zasilanie
+    icon: mdi:power
+  - entity: sensor.warmlink_DEVICE_CODE_modestate
+    name: Tryb pracy
+    icon: mdi:heat-pump
+  - entity: binary_sensor.warmlink_DEVICE_CODE_fault
+    name: Awaria
+    icon: mdi:alert-circle

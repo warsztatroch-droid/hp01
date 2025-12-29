@@ -1,0 +1,162 @@
+# Przykładowe automatyzacje dla Warmlink
+# Zamień DEVICE_CODE na kod swojego urządzenia
+# Dodaj do configuration.yaml lub automations.yaml
+
+automation:
+  # === POWIADOMIENIA ===
+  
+  # Powiadom o awarii
+  - alias: "Warmlink - Powiadom o awarii"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.warmlink_DEVICE_CODE_fault
+        to: "on"
+    action:
+      - service: notify.mobile_app_twoj_telefon
+        data:
+          title: "⚠️ Awaria pompy ciepła!"
+          message: "Wykryto awarię pompy ciepła Warmlink. Sprawdź urządzenie."
+          data:
+            tag: warmlink_fault
+            importance: high
+
+  # Powiadom gdy pompa offline
+  - alias: "Warmlink - Pompa offline"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.warmlink_DEVICE_CODE_online
+        to: "off"
+        for: "00:05:00"
+    action:
+      - service: notify.mobile_app_twoj_telefon
+        data:
+          title: "📡 Pompa ciepła offline"
+          message: "Warmlink nie odpowiada od 5 minut. Sprawdź połączenie."
+
+  # === OSTRZEŻENIA O WYDAJNOŚCI ===
+  
+  # Niski COP
+  - alias: "Warmlink - Niski COP"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.warmlink_DEVICE_CODE_cop_eer_total
+        below: 2.5
+        for: "00:30:00"
+    condition:
+      - condition: state
+        entity_id: switch.warmlink_DEVICE_CODE_power_switch
+        state: "on"
+    action:
+      - service: notify.mobile_app_twoj_telefon
+        data:
+          title: "📉 Niski COP pompy ciepła"
+          message: "COP spadł poniżej 2.5 od 30 minut (aktualnie {{ states('sensor.warmlink_DEVICE_CODE_cop_eer_total') }})"
+
+  # Wysoka temperatura tłoczenia
+  - alias: "Warmlink - Wysoka temp. tłoczenia"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.warmlink_DEVICE_CODE_t12
+        above: 100
+    action:
+      - service: notify.mobile_app_twoj_telefon
+        data:
+          title: "🌡️ Wysoka temperatura tłoczenia"
+          message: "Temperatura tłoczenia wynosi {{ states('sensor.warmlink_DEVICE_CODE_t12') }}°C"
+
+  # === AUTOMATYCZNE STEROWANIE ===
+  
+  # Tryb cichy w nocy
+  - alias: "Warmlink - Tryb cichy nocą"
+    trigger:
+      - platform: time
+        at: "22:00:00"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.warmlink_DEVICE_CODE_h22_switch
+
+  - alias: "Warmlink - Wyłącz tryb cichy rano"
+    trigger:
+      - platform: time
+        at: "07:00:00"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.warmlink_DEVICE_CODE_h22_switch
+
+  # Obniż temperaturę gdy nikogo nie ma
+  - alias: "Warmlink - Tryb away"
+    trigger:
+      - platform: state
+        entity_id: group.all_persons  # lub zone.home
+        to: "not_home"
+        for: "00:30:00"
+    action:
+      - service: number.set_value
+        target:
+          entity_id: number.warmlink_DEVICE_CODE_r02
+        data:
+          value: 35  # Obniżona temperatura ogrzewania
+
+  - alias: "Warmlink - Powrót do domu"
+    trigger:
+      - platform: state
+        entity_id: group.all_persons
+        to: "home"
+    action:
+      - service: number.set_value
+        target:
+          entity_id: number.warmlink_DEVICE_CODE_r02
+        data:
+          value: 45  # Normalna temperatura ogrzewania
+
+  # === DEZYNFEKCJA ===
+  
+  # Cotygodniowa dezynfekcja (anty-legionella)
+  - alias: "Warmlink - Cotygodniowa dezynfekcja"
+    trigger:
+      - platform: time
+        at: "03:00:00"
+    condition:
+      - condition: time
+        weekday:
+          - sun  # Niedziela w nocy
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.warmlink_DEVICE_CODE_g05_switch
+      - delay: "01:00:00"  # Poczekaj godzinę
+      - service: switch.turn_off
+        target:
+          entity_id: switch.warmlink_DEVICE_CODE_g05_switch
+
+# === SENSORY POMOCNICZE ===
+# Dodaj do configuration.yaml
+
+sensor:
+  # Sensor zużycia energii (do Energy Dashboard)
+  - platform: integration
+    source: sensor.warmlink_DEVICE_CODE_power_in_total
+    name: Warmlink Energy Consumption
+    unit_prefix: k
+    round: 2
+    method: left
+
+  # Średni COP z ostatniej godziny
+  - platform: statistics
+    name: "Warmlink Średni COP (1h)"
+    entity_id: sensor.warmlink_DEVICE_CODE_cop_eer_total
+    state_characteristic: mean
+    max_age:
+      hours: 1
+
+  # Template sensor - różnica temperatur
+  - platform: template
+    sensors:
+      warmlink_delta_t:
+        friendly_name: "Warmlink Delta T"
+        unit_of_measurement: "°C"
+        value_template: >-
+          {{ (states('sensor.warmlink_DEVICE_CODE_t02') | float - 
+              states('sensor.warmlink_DEVICE_CODE_t01') | float) | round(1) }}

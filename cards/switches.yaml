@@ -1,0 +1,22 @@
+# Przełączniki (Switch)
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: entities
+title: Przełączniki
+show_header_toggle: false
+entities:
+  - entity: switch.warmlink_DEVICE_CODE_power_switch
+    name: Zasilanie
+    icon: mdi:power
+  - entity: switch.warmlink_DEVICE_CODE_h22_switch
+    name: Tryb cichy
+    icon: mdi:volume-off
+  - entity: switch.warmlink_DEVICE_CODE_h05_switch
+    name: Funkcja chłodzenia
+    icon: mdi:snowflake
+  - entity: switch.warmlink_DEVICE_CODE_g05_switch
+    name: Dezynfekcja
+    icon: mdi:bacteria
+  - entity: switch.warmlink_DEVICE_CODE_h01_switch
+    name: Pamięć po wyłączeniu
+    icon: mdi:memory

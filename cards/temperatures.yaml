@@ -1,0 +1,32 @@
+# Wskaźniki temperatur (Gauge)
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: horizontal-stack
+cards:
+  - type: gauge
+    entity: sensor.warmlink_DEVICE_CODE_t01
+    name: Wlot
+    min: 0
+    max: 70
+    severity:
+      green: 25
+      yellow: 45
+      red: 55
+  - type: gauge
+    entity: sensor.warmlink_DEVICE_CODE_t02
+    name: Wylot
+    min: 0
+    max: 70
+    severity:
+      green: 25
+      yellow: 45
+      red: 55
+  - type: gauge
+    entity: sensor.warmlink_DEVICE_CODE_t04
+    name: Zewn.
+    min: -30
+    max: 40
+    severity:
+      green: 0
+      yellow: -10
+      red: -20

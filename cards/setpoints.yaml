@@ -1,0 +1,18 @@
+# Temperatury zadane (Number/Suwaki)
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: entities
+title: Temperatury zadane
+entities:
+  - entity: number.warmlink_DEVICE_CODE_r01
+    name: Temperatura CWU
+    icon: mdi:water-boiler
+  - entity: number.warmlink_DEVICE_CODE_r02
+    name: Temperatura ogrzewania
+    icon: mdi:radiator
+  - entity: number.warmlink_DEVICE_CODE_r03
+    name: Temperatura chłodzenia
+    icon: mdi:snowflake
+  - entity: number.warmlink_DEVICE_CODE_r70
+    name: Temperatura pokojowa
+    icon: mdi:home-thermometer

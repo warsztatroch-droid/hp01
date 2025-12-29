@@ -1,0 +1,15 @@
+# Wydajność (COP, Moc)
+# Zamień DEVICE_CODE na kod swojego urządzenia
+
+type: entities
+title: Wydajność
+entities:
+  - entity: sensor.warmlink_DEVICE_CODE_cop_eer_total
+    name: COP/EER
+    icon: mdi:gauge
+  - entity: sensor.warmlink_DEVICE_CODE_power_in_total
+    name: Pobór mocy
+    icon: mdi:flash
+  - entity: sensor.warmlink_DEVICE_CODE_capacity_out_total
+    name: Moc grzewcza
+    icon: mdi:fire
